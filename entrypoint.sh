@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+# vim: sts=2 sw=2 et ai
 
-set -xe
+set -eo pipefail
 
 if [ -z "${INPUT_GITHUB_TOKEN}" ] ; then
   echo "::notice title=GitHub API token::Consider setting a GITHUB_TOKEN to prevent GitHub api rate limits"
@@ -22,11 +23,13 @@ function get_release_assets() {
   )
   [ -n "${INPUT_GITHUB_TOKEN}" ] && args+=(--header "Authorization: Bearer ${INPUT_GITHUB_TOKEN}")
 
-  if ! curl --fail-with-body -sS "${args[@]}" "https://api.github.com/repos/${repo}/releases/${version}"; then
+  local payload=''
+
+  if ! payload="$(curl --fail-with-body -sS "${args[@]}" "https://api.github.com/repos/${repo}/releases/${version}")"; then
     echo "::error title=GitHub API request failure::The request to the GitHub API was likely rate-limited. Set a GITHUB_TOKEN to prevent this"
     exit 1
   else
-    curl "${args[@]}" "https://api.github.com/repos/${repo}/releases/${version}" | jq '.assets[] | { name: .name, download_url: .browser_download_url }'
+    jq '.assets[] | { name: .name, download_url: .browser_download_url }' <<< "${payload}"
   fi
 }
 
@@ -54,7 +57,7 @@ if [ -n "${INPUT_ADDITIONAL_ARGS}" ]; then
   TFSEC_ARGS_OPTION="${INPUT_ADDITIONAL_ARGS}"
 fi
 
-if [ -n "${INPUT_SOFT_FAIL}" ]; then 
+if [ -n "${INPUT_SOFT_FAIL}" ]; then
   SOFT_FAIL="--soft-fail"
 fi
 
