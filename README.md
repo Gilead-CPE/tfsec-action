@@ -3,6 +3,7 @@
 </p>
 
 # tfsec-action
+
 Run tfsec as a GitHub action with configurable output
 
 To add the action, add `tfsec.yml` into the `.github/workflows` directory in the root of your Github project.
@@ -23,9 +24,9 @@ jobs:
 
     steps:
       - name: Clone repo
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
       - name: tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
+        uses: Gilead-CPE/tfsec-action@v1.0.1
 ```
 
 Run tfsec as part of a GitHub Action flow. Optionally prevent the failure of tfsec from breaking the build or pass additional arguments using `additional_args`.
@@ -64,12 +65,11 @@ jobs:
 
     steps:
       - name: Clone repo
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
       - name: tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
+        uses: Gilead-CPE/tfsec-action@v1.0.1
         with:
           soft_fail: true
-
 ```
 
 ## Open Source Attribution
@@ -77,7 +77,7 @@ jobs:
 - bash: [GPL 3.0 or later](https://www.gnu.org/licenses/gpl-3.0.html)
 - curl: [curl license](https://curl.se/docs/copyright.html)
 - git: [GPL 2.0 or later](https://github.com/git/git/blob/master/COPYING)
-- jq: [MIT](https://github.com/stedolan/jq/blob/master/COPYING) 
+- jq: [MIT](https://github.com/stedolan/jq/blob/master/COPYING)
 
 ## License
 
